@@ -220,25 +220,36 @@ class ProductsController extends Controller
     public function products($url = null){
         //get all categories and subcategories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
-        $categoryDetails = Category::where(['url'=>$url])->first();
 
-        if($categoryDetails->parent_id==0){
-            $subCategories = Category::where(['parent_id'=>$categoryDetails->id])->get();
-            $cat_ids = "";
+        $categoriesDetails = Category::where(['url'=>$url])->first();
+
+        if($categoriesDetails->parent_id==0){
+            //if url is main category url
+            $subCategories = Category::where(['parent_id'=>$categoriesDetails->id])->get();
+            //$cat_ids = "";
             foreach ($subCategories as $subCat){
-                $cat_ids .=$subCat->id.",";
-
+                $cat_ids[] = $subCat->id; //$cat_ids .= $subCat->id.",";
             }
-            echo $cat_ids; die;
+            $productsAll = Product::whereIn('category_id',$cat_ids)->get();  //array($cat_ids)
+            $productsAll = json_decode(json_encode($productsAll));
+            //echo "<pre>"; print_r($productsAll); die;
+
         }else{
-            $productAll = Product::where(['category_id'=>$categoryDetails->id])->get();
+            $productsAll = Product::where(['category_id'=>$categoriesDetails->id])->get();
         }
 
-        $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        $productsAll = Product::where(['category_id' => $categoriesDetails->id])->get();
 
         return view('products.listing')->with(compact('categories','categoriesDetails','productsAll'));
 
 
     }
 
+    public function product($id = null){
+        //Get Product Details
+        $productDetails = Product::where('id',$id)->first();
+
+        return view('products.detail')->with(compact('productDetails'));
+
+    }
 }
