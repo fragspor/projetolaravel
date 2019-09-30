@@ -31,7 +31,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('products/{url}','ProductsController@products');
 
 //Product Detail Page
-Route::get('product/{id}','ProductController@product');
+Route::get('product/{id}','ProductsController@product');
 
 Route::group(['middleware' => ['auth']], function(){
 

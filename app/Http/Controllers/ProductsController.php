@@ -218,6 +218,13 @@ class ProductsController extends Controller
     }
 
     public function products($url = null){
+
+        // Erro 404, caso o url da página estiver incorreto
+        $countCategory = Category::where(['url'=>$url, 'status'=>"1"])->count();
+        if($countCategory==0){
+            abort(404);
+        }
+
         //get all categories and subcategories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
 
@@ -249,7 +256,10 @@ class ProductsController extends Controller
         //Get Product Details
         $productDetails = Product::where('id',$id)->first();
 
-        return view('products.detail')->with(compact('productDetails'));
+        //get all categories and subcategories
+        $categories = Category::with('categories')->where(['parent_id'=>0])->get();
+
+        return view('products.detail')->with(compact( 'productDetails','categories'));
 
     }
 }
