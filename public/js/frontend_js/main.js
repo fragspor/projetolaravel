@@ -40,7 +40,7 @@ $(document).ready(function(){
            url:'/get-product-price',
            data:{ idSize:idSize },
            success: function(resp) {
-               $("#getPrice").html("€ afasfa" + resp);
+               $("#getPrice").html("€ " + resp);
            },error: function() {
                alert("Error");
            }

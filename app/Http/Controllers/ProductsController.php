@@ -30,6 +30,11 @@ class ProductsController extends Controller
             }else{
                 $product->description = '';
             }
+            if(!empty($data['care'])){
+                $product->care = $data['care'];
+            }else{
+                $product->care = '';
+            }
             $product->price = $data['price'];
 
             //upload photos
@@ -97,6 +102,9 @@ class ProductsController extends Controller
                 if(empty($data['description'])){
                     $data['description'] = '';
                 }
+                if(empty($data['care'])){
+                    $data['care'] = '';
+                }
             }
 
 
@@ -107,6 +115,7 @@ class ProductsController extends Controller
                 'product_code'=>$data['product_code'],
                 'product_color'=>$data['product_color'],
                 'description'=>$data['description'],
+                'care'=>$data['care'],
                 'price'=>$data['price'],
                 'image'=>$filename]);
 
@@ -141,7 +150,7 @@ class ProductsController extends Controller
         return view('admin.products.edit_product')->with(compact('productDetails','categories_dropdown'));
     }
     public function viewProducts(){
-        $products = Product::get();
+        $products = Product::orderby('id','DESC')->get();
         foreach($products as $key => $val){
             $category_name = Category::where(['id'=>$val->category_id])->first();
             $products[$key]->category_name = $category_name['name'];
