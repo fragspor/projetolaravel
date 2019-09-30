@@ -7,7 +7,7 @@ use App\ProductsAttribute;
 use Illuminate\Http\Request;
 use Auth;
 use Session;
-use Image;
+use Intervention\Image\Facades\Image;
 use App\Product;
 
 class ProductsController extends Controller
@@ -226,6 +226,19 @@ class ProductsController extends Controller
         return redirect()->back()->with('flash_message_success','Attribute has been deleted successfully!');
     }
 
+    public function editAttributes(Request $request, $id=null){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            foreach ($data['idAttr'] as $key => $attr) {
+
+                ProductsAttribute::where(['id'=>$data['idAttr'][$key]])->update
+                (['price'=>$data['price'][$key],'stock'=>$data['stock'][$key]]);
+            }
+        return redirect()->back()->with('flash_message_success','Products Attributes has been updated successfully!');
+
+        }
+    }
+
     public function products($url = null){
         //get all categories and subcategories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
@@ -262,7 +275,11 @@ class ProductsController extends Controller
 
         // Get All Categories and Sub Categories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
-        return view('products.detail')->with(compact('productDetails','categories'));
+
+
+        $total_stock = ProductsAttribute::where('product_id',$id)->sum('stock');
+
+        return view('products.detail')->with(compact('productDetails','categories','total_stock'));
 
     }
 

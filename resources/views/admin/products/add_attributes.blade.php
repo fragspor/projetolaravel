@@ -67,33 +67,36 @@
                             <h5>View Attributes</h5>
                         </div>
                         <div class="widget-content nopadding">
-                            <table class="table table-bordered data-table">
-                                <thead>
-                                <tr>
-                                    <th style="font-size: 12px">ATTRIBUTE ID</th>
-                                    <th style="font-size: 12px">SKU</th>
-                                    <th style="font-size: 12px">SIZE</th>
-                                    <th style="font-size: 12px">PRICE</th>
-                                    <th style="font-size: 12px">STOCK</th>
-                                    <th style="font-size: 12px">ACTIONS </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($productDetails['attributes'] as $attribute)
-                                    <tr class="gradeX">
-                                        <td>{{ $attribute->id }}</td>
-                                        <td>{{ $attribute->sku }}</td>
-                                        <td>{{ $attribute->size }}</td>
-                                        <td>{{ $attribute->price }} €</td>
-                                        <td>{{ $attribute->stock }}</td>
-                                        <td class="text-center">
-{{--                                        <a id="delAtt" href="{{ url('admin/delete-product/'.$attribute->id) }}" class="btn btn-danger btn-mini">Delete</a>--}}
-                                            <a href="{{url('admin/delete-attribute/'.$attribute->id)}}:" rel="{{$attribute->id}}" rel1="delete-attribute" class="deleteAtt btn btn-danger btn-mini">Delete</a>
-                                        </td>
+                            <form action="{{ url('/admin/edit-attributes/'.$productDetails->id) }}" method="post"> {{ csrf_field() }}
+                                <table class="table table-bordered data-table">
+                                    <thead>
+                                    <tr>
+                                        <th style="font-size: 12px">ATTRIBUTE ID</th>
+                                        <th style="font-size: 12px">SKU</th>
+                                        <th style="font-size: 12px">SIZE</th>
+                                        <th style="font-size: 12px">PRICE</th>
+                                        <th style="font-size: 12px">STOCK</th>
+                                        <th style="font-size: 12px">ACTIONS </th>
                                     </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($productDetails['attributes'] as $attribute)
+                                        <tr class="gradeX">
+                                            <td><input type="hidden" name="idAttr[]" value="{{ $attribute->id }}">{{ $attribute->id }}</td>
+                                            <td>{{ $attribute->sku }}</td>
+                                            <td>{{ $attribute->size }}</td>
+                                            <td><input type="text" name="price[]" value="{{ $attribute->price }}"> €</td>
+                                            <td><input type="text" name="stock[]" value="{{ $attribute->stock }}"> Qty</td>
+                                            <td class="text-center">
+    {{--                                        <a id="delAtt" href="{{ url('admin/delete-product/'.$attribute->id) }}" class="btn btn-danger btn-mini">Delete</a>--}}
+                                                <input type="submit" value="update" class="btn btn-primary btn-mini">
+                                                <a href="{{url('admin/delete-attribute/'.$attribute->id) }}" rel="{{$attribute->id}}" rel1="delete-attribute" class="deleteAtt btn btn-danger btn-mini">Delete</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>

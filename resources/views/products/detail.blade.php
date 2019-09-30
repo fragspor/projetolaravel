@@ -6,34 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
-                    <div class="left-sidebar">
-                        <h2>Category</h2>
-                        <div class="panel-group category-products" id="accordian"><!--category-products-->
-                            <div class="panel panel-default">
-                                @foreach($categories as $category)
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordian" href="{{$category->id}}">
-                                                <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                                                {{$category->name}}
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="{{$category->id}}" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <ul>
-                                                @foreach($category->categories as $subcategory)
-                                                    <li><a href="{{ asset('/products/'.$subcategory->url)}}">{{$subcategory->name}} </a></li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                        </div><!--/category-products-->
-
-                    </div>
+                    @include('layouts.frontLayout.front_sidebar')
                 </div>
 
                 <div class="col-sm-9 padding-right">
@@ -97,12 +70,16 @@
 									<span id="getPrice">€ {{ $productDetails->price }}</span>
 									<label>Quantity:</label>
 									<input type="text" value="1" />
-									<button type="button" class="btn btn-fefault cart">
-										<i class="fa fa-shopping-cart"></i>
-										Add to cart
-									</button>
+                                    @if($total_stock>0)
+                                        <button type="button" class="btn btn-fefault cart">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            Add to cart
+                                        </button>
+                                    @endif
 								</span>
-                                <p><b>Availability:</b> In Stock</p>
+                                <p><b>Availability:</b>
+                                    @if($total_stock>0) In Stock @else Out of Stock @endif
+                                </p>
                                 <p><b>Condition:</b> New</p>
                                 <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
                             </div><!--/product-information-->
@@ -118,7 +95,7 @@
                             </ul>
                         </div>
                         <div class="tab-content">
-                            <div class="tab-pane fade" id="description" >
+                            <div class="tab-pane fade active in" id="description" >
                                 <div class="col-sm-12">
                                     <p>
                                         {{ $productDetails->description }}
